@@ -52,6 +52,16 @@ export default function App() {
             (await (await getContract()).getTotalClaps()).toNumber()
           );
           getAllClaps();
+          (await getContract()).on("NewClap", (from, timestamp, message) => {
+            setAllClaps((prevState) => [
+              ...prevState.reverse(),
+              {
+                address: from,
+                timestamp: new Date(timestamp * 1000),
+                message: message,
+              },
+            ]);
+          });
         } else {
           console.log("No authorized account found");
         }
@@ -86,7 +96,7 @@ export default function App() {
 
       console.log("Connected", accounts[0]);
       setCurrentAccount(accounts[0]);
-      setClapCount((await contract.getTotalClaps()).toNumber());
+      setClapCount((await (await getContract()).getTotalClaps()).toNumber());
     } catch (error) {
       console.log(error);
     }
@@ -97,15 +107,15 @@ export default function App() {
     try {
       const { ethereum } = window;
       if (ethereum) {
-        const clapTxn = await contract.clap(messageValue);
+        const clapTxn = await contract.clap(messageValue, { gasLimit: 300000 });
         console.log("Mining...", clapTxn.hash);
         await clapTxn.wait();
         console.log("Mined -- ", clapTxn.hash);
+        setMessageValue("");
 
         let count = await contract.getTotalClaps();
         console.log("Retrieved total clap count...", count.toNumber());
         setClapCount(count.toNumber());
-        getAllClaps();
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -121,13 +131,13 @@ export default function App() {
       let clapsCleaned = [];
       claps.forEach((clap) => {
         clapsCleaned.push({
-          address: clap.claper,
+          address: clap.clapper,
           timestamp: new Date(clap.timestamp * 1000),
           message: clap.message,
         });
       });
 
-      setAllClaps(clapsCleaned);
+      setAllClaps(clapsCleaned.reverse());
     } catch (error) {
       console.log(error);
     }
