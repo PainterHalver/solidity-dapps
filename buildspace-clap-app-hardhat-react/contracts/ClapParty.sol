@@ -35,7 +35,7 @@ contract ClapParty {
         emit NewClap(msg.sender, block.timestamp, _message);
 
         uint256 prizeAmount = 0.0001 ether;
-        if (totalClaps % 5 == 0 && prizeAmount > address(this).balance) {
+        if (totalClaps % 5 == 0 && prizeAmount < address(this).balance) {
             // No money no prize :D
             (bool success, ) = (msg.sender).call{value: prizeAmount}("");
             require(success, "Failed to send money from contract!");
