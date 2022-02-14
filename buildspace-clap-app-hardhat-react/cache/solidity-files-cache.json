@@ -37,8 +37,8 @@
       ]
     },
     "D:\\Learning\\Projects\\solidity-dapps\\buildspace-clap-app-hardhat-react\\contracts\\ClapParty.sol": {
-      "lastModificationDate": 1644825260491,
-      "contentHash": "7c578e65e531ece6cff85807d5a99eca",
+      "lastModificationDate": 1644826634910,
+      "contentHash": "a26670a3cbf1e9af8a8af45d0300e9ff",
       "sourceName": "contracts/ClapParty.sol",
       "solcConfig": {
         "version": "0.8.4",

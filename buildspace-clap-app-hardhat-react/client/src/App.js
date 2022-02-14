@@ -14,7 +14,7 @@ export default function App() {
   const [contract, setContract] = useState(null);
   const [allClaps, setAllClaps] = useState([]);
 
-  const contractAddress = "0xc13D33e451Ec60e349e92268ddEcD5E26168369c";
+  const contractAddress = "0x8EB5EC260c70133111468d081b220cceCA0145b0";
   const contractABI = ClapPortal.abi;
   const { ethereum } = window;
 
@@ -156,6 +156,11 @@ export default function App() {
               smart contract
             </a>{" "}
             to find out what x is! 😉
+          </p>
+          <p>
+            Okay because I'm a long-tempered person, I will give you another 30%
+            chance every clap to get the reward. Now type in some words and clap
+            the hell out of me!
           </p>
           <p>To date, I have received {clapCount} claps!</p>
         </div>

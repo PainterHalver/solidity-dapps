@@ -21,15 +21,12 @@ const main = async () => {
     hre.ethers.utils.formatEther(contractBalance)
   );
 
-  /*
-   * Send Clap
-   */
-  let clapTxn = await clapContract.clap("A message!");
+  let clapTxn = await clapContract.clap("A message1!");
   await clapTxn.wait();
 
-  /*
-   * Get Contract balance to see what happened!
-   */
+  clapTxn = await clapContract.clap("A message2!");
+  await clapTxn.wait();
+
   contractBalance = await hre.ethers.provider.getBalance(clapContract.address);
   console.log(
     "Contract balance:",
