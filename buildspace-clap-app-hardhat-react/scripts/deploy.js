@@ -6,7 +6,9 @@ const main = async () => {
   console.log("Account balance: ", accountBalance.toString());
 
   const clapContractFactory = await hre.ethers.getContractFactory("ClapParty");
-  const clapContract = await clapContractFactory.deploy();
+  const clapContract = await clapContractFactory.deploy({
+    value: hre.ethers.utils.parseEther("0.001"),
+  });
   await clapContract.deployed();
 
   console.log("ClapParty address: ", clapContract.address);

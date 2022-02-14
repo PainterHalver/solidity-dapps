@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 import { ethers } from "ethers";
 import "./App.css";
 import ClapPortal from "./utils/ClapParty.json";
 
+dayjs.extend(relativeTime);
+
 export default function App() {
   const [currentAccount, setCurrentAccount] = useState("");
+  const [messageValue, setMessageValue] = useState("");
   const [clapCount, setClapCount] = useState("--");
   const [contract, setContract] = useState(null);
+  const [allClaps, setAllClaps] = useState([]);
 
-  const contractAddress = "0x11ba990d7cd2Bd83267cF253c06cc1588D7cc7ab";
+  const contractAddress = "0xc13D33e451Ec60e349e92268ddEcD5E26168369c";
   const contractABI = ClapPortal.abi;
   const { ethereum } = window;
 
@@ -45,6 +51,7 @@ export default function App() {
           setClapCount(
             (await (await getContract()).getTotalClaps()).toNumber()
           );
+          getAllClaps();
         } else {
           console.log("No authorized account found");
         }
@@ -85,11 +92,12 @@ export default function App() {
     }
   };
 
-  const clap = async () => {
+  const clap = async (e) => {
+    e.preventDefault();
     try {
       const { ethereum } = window;
       if (ethereum) {
-        const clapTxn = await contract.clap();
+        const clapTxn = await contract.clap(messageValue);
         console.log("Mining...", clapTxn.hash);
         await clapTxn.wait();
         console.log("Mined -- ", clapTxn.hash);
@@ -97,6 +105,7 @@ export default function App() {
         let count = await contract.getTotalClaps();
         console.log("Retrieved total clap count...", count.toNumber());
         setClapCount(count.toNumber());
+        getAllClaps();
       } else {
         console.log("Ethereum object doesn't exist!");
       }
@@ -105,18 +114,63 @@ export default function App() {
     }
   };
 
+  const getAllClaps = async () => {
+    try {
+      const claps = await (await getContract()).getAllClaps();
+
+      let clapsCleaned = [];
+      claps.forEach((clap) => {
+        clapsCleaned.push({
+          address: clap.claper,
+          timestamp: new Date(clap.timestamp * 1000),
+          message: clap.message,
+        });
+      });
+
+      setAllClaps(clapsCleaned);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="mainContainer">
       <div className="dataContainer">
-        <div className="header">Yo buddy!</div>
+        <div className="header">Hello there! 👏</div>
 
         <div className="bio">
-          If my projects interest you somehow in anyway, send me a 👏. I would
-          really appreciate it!
+          If my projects interest you in anyway, or if you are just a little
+          delighted at the moment, or if nothing actually :D, send me a 👏 with
+          a message.
+          <p>
+            It will be shown right down there so you and everybody can see it!
+          </p>
+          <p>
+            Still not interested in clapping? Here's a little incentive: There
+            will be some small amount of ETH sent to the clapper everytime the
+            total claps count reaches a multiple of x. Take a look at the{" "}
+            <a
+              href={`https://rinkeby.etherscan.io/address/${contractAddress}`}
+              target="_blank"
+            >
+              smart contract
+            </a>{" "}
+            to find out what x is! 😉
+          </p>
           <p>To date, I have received {clapCount} claps!</p>
         </div>
 
-        <button className="clapButton" onClick={clap}>
+        <form onSubmit={clap} id="clap-form" className="form-message">
+          <input
+            type="text"
+            placeholder="Your message"
+            value={messageValue}
+            onChange={(e) => setMessageValue(e.target.value)}
+            className="input-message"
+          />
+        </form>
+
+        <button className="clapButton" type="submit" form="clap-form">
           Clap At Me
         </button>
         {/*
@@ -127,6 +181,16 @@ export default function App() {
             Connect Wallet
           </button>
         )}
+
+        {allClaps.map((clap, index) => {
+          return (
+            <div key={index} className="messages-container">
+              <div>Address: {clap.address}</div>
+              <div>Time: {dayjs(clap.timestamp.toString()).fromNow()}</div>
+              <div>Message: {clap.message}</div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );

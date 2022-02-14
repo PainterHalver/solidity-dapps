@@ -18,6 +18,10 @@
   font-weight: 600;
 }
 
+a {
+  color: #42b3f5;
+}
+
 .bio {
   text-align: center;
   color: gray;
@@ -30,5 +34,30 @@
   padding: 8px;
   border: 0;
   border-radius: 5px;
-  
+}
+
+.messages-container {
+  border-radius: 5px;
+  background-color: OldLace;
+  margin-top: 16px;
+  padding: 8px;
+}
+
+.form-message {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.input-message {
+  max-width: 600px;
+  width: 100%;
+  border: 1px solid #efefef;
+  padding: 10px 10px;
+  border-radius: 5px;
+  background-color: #efefef;
+}
+
+.input-message:focus {
+  outline: none;
 }
