@@ -16,7 +16,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 // Go to https://hardhat.org/config/ to learn more
 module.exports = {
   solidity: "0.8.10",
-  defaultNetwork: "mumbai",
+  // defaultNetwork: "mumbai",
   networks: {
     mumbai: {
       url: process.env.MUMBAI_URL,

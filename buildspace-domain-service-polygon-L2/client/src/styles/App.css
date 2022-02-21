@@ -118,12 +118,12 @@ header {
 }
 
 .mint-button {
-  background: -webkit-linear-gradient(left, #a200d6, #ff6fdf);
+  background: -webkit-linear-gradient(left, yellow, orangered);
   font-size: 18px;
   background-size: 200% 200%;
   animation: gradient-animation 4s ease infinite;
   margin: 20px 10px;
-  border-radius: 20px;
+  border-radius: 5px;
   padding: 0px 2rem;
 }
 
